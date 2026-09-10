@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Railway Reservation System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-train"></i> South Western Railways
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#booking">Book Ticket</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#myBookings">My Bookings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" id="loginBtn">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" id="logoutBtn" style="display:none;">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="display-4 fw-bold text-white mb-4">
+                        <i class="fas fa-train-subway"></i> Your Journey Starts Here
+                    </h1>
+                    <p class="lead text-white mb-4">Fast, Safe & Reliable Railway Reservation System</p>
+                    <button class="btn btn-lg btn-warning" onclick="scrollToBooking()">
+                        <i class="fas fa-ticket-alt"></i> Book Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Section -->
+    <section id="booking" class="booking-section py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">
+                <i class="fas fa-search"></i> Search & Book Trains
+            </h2>
+
+            <div class="card shadow-lg">
+                <div class="card-body p-4">
+                    <form id="searchForm" class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">From Station</label>
+                            <select class="form-select" id="stationFrom" required>
+                                <option value="">Select Station</option>
+                                <option value="Chennai">Chennai</option>
+                                <option value="Bangalore">Bangalore</option>
+                                <option value="Trichy">Trichy</option>
+                                <option value="Madurai">Madurai</option>
+                                <option value="Erode">Erode</option>
+                                <option value="Karur">Karur</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">To Station</label>
+                            <select class="form-select" id="stationTo" required>
+                                <option value="">Select Station</option>
+                                <option value="Chennai">Chennai</option>
+                                <option value="Bangalore">Bangalore</option>
+                                <option value="Trichy">Trichy</option>
+                                <option value="Madurai">Madurai</option>
+                                <option value="Erode">Erode</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Date of Journey</label>
+                            <input type="date" class="form-control" id="journeyDate" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Class</label>
+                            <select class="form-select" id="trainClass" required>
+                                <option value="">Select Class</option>
+                                <option value="1A">1st Class (AC)</option>
+                                <option value="2A">2nd Class (AC)</option>
+                                <option value="3A">3rd Class (AC)</option>
+                                <option value="SL">Sleeper</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Number of Passengers</label>
+                            <input type="number" class="form-control" id="passengers" value="1" min="1" max="6" required>
+                        </div>
+
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-danger btn-lg w-100">
+                                <i class="fas fa-search"></i> Search Trains
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Available Trains -->
+            <div id="trainResults" class="row mt-5" style="display:none;">
+                <div class="col-12">
+                    <h3 class="mb-4">Available Trains</h3>
+                </div>
+                <div id="trainList" class="col-12"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reservation Form Section -->
+    <section id="reservationSection" class="py-5" style="display:none;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <div class="card shadow-lg">
+                        <div class="card-header bg-danger text-white">
+                            <h4><i class="fas fa-user-check"></i> Passenger Details</h4>
+                        </div>
+                        <div class="card-body">
+                            <form id="reservationForm">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Full Name</label>
+                                        <input type="text" class="form-control" id="fullName" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Email</label>
+                                        <input type="email" class="form-control" id="email" required>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Phone Number</label>
+                                        <input type="tel" class="form-control" id="phone" placeholder="10 digit number" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Gender</label>
+                                        <select class="form-select" id="gender" required>
+                                            <option value="">Select Gender</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Full Address</label>
+                                    <textarea class="form-control" id="address" rows="3" required></textarea>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">City</label>
+                                        <input type="text" class="form-control" id="city" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Postal Code</label>
+                                        <input type="text" class="form-control" id="postalCode" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Special Requests (Optional)</label>
+                                    <textarea class="form-control" id="specialRequests" rows="2"></textarea>
+                                </div>
+
+                                <div class="card bg-light mb-3">
+                                    <div class="card-body">
+                                        <h5>Fare Summary</h5>
+                                        <p class="mb-2">Train: <strong id="selectedTrain"></strong></p>
+                                        <p class="mb-2">Class: <strong id="selectedClass"></strong></p>
+                                        <p class="mb-2">Passengers: <strong id="selectedPassengers"></strong></p>
+                                        <hr>
+                                        <h5>Total Amount: ₹<strong id="totalAmount">0</strong></h5>
+                                    </div>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                    <label class="form-check-label" for="agreeTerms">
+                                        I agree to the terms and conditions
+                                    </label>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-danger btn-lg">
+                                        <i class="fas fa-credit-card"></i> Proceed to Payment
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="goBackToSearch()">Back</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- My Bookings Section -->
+    <section id="myBookings" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="mb-5">
+                <i class="fas fa-bookmark"></i> My Bookings
+            </h2>
+            <div id="bookingsList" class="row"></div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="fas fa-sign-in-alt"></i> Login</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Email</label>
+                            <input type="email" class="form-control" id="loginEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100">Login</button>
+                    </form>
+                    <hr>
+                    <p class="text-center mb-0">New user? <a href="#" onclick="switchToRegister()">Register here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="fas fa-user-plus"></i> Register</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Full Name</label>
+                            <input type="text" class="form-control" id="registerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Email</label>
+                            <input type="email" class="form-control" id="registerEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Password</label>
+                            <input type="password" class="form-control" id="registerPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100">Register</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5><i class="fas fa-train"></i> South Western Railways</h5>
+                    <p>Your trusted partner for railway reservations</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white-50">About Us</a></li>
+                        <li><a href="#" class="text-white-50">Contact</a></li>
+                        <li><a href="#" class="text-white-50">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Contact Us</h5>
+                    <p class="mb-1"><i class="fas fa-phone"></i> 1800-111-139</p>
+                    <p class="mb-1"><i class="fas fa-envelope"></i> support@railways.in</p>
+                </div>
+            </div>
+            <hr class="bg-white-50">
+            <p class="text-center mb-0">&copy; 2024 South Western Railways. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
